@@ -1,0 +1,239 @@
+Summary:
+1/ Routing in Angular
++ router-outlet: 
+    - An Angular directive from the router library that is used to insert the component
+    matched by routes to be displayed on the screen
+    Ex: 
+    @Component({
+        selector: 'events-app',
+        template: `
+            ...
+            <router-outlet> </router-outlet>
+        `,
+    })
+
++ Routes:
+    - Define a Routes class to a routes property
+    - properties: + path: Path of web url will change when access to this route
+                  + component: Component will change when access to this route
+                  + redirectTo: Route will redirect to when access to this route
+                  + pathMatch:  
+                    . "full" : redirect if URL MATCH FULL specified path String
+                    . "prefix": redirect if URL START WITH specified path String
+    - Base Route of app: Define in index.html <base href="/">
+    - Implement Routes help IDE to get extra infomation of Routes properties 
+    
+    Ex: export const appRoutes: Routes = [
+        {path: ..., component: ...},
+        {path: ..., component: ...},
+        {path: '', redirectTo: '...', pathMatch: '...'},
+    ]
+
++ RouterModule:
+    - Use to import Routes to application
+    Ex: @NgModule({imports: [..., RouterModule.forRoot(appRoutes)], ...})
+
++ ActivatedRoute:
+    - ActivatedRoute is a service, that provides route-specific information like Route 
+    Parameters, Query Parameters, URL Fragments, etc.
+    - Injecting and Using:
+    Ex: 
+    export class EventsDetailsComponent implements OnInit {
+        event: any;
+        constructor(
+            private eventsService: EventsService,
+            private route: ActivatedRoute
+        ) {}
+
+        ngOnInit() {
+            this.event = this.eventsService.getEvent(+this.route.snapshot.params['id']);
+        }
+    }
+
++ [routerLink]: 
+    - RouterLink is a directive for navigating to a different route declaratively
+    Ex: 
+    <div [routerLink]="['/events', event.id]" class="well hoverwell thumbnail">
+        ...
+    </div>
+
++ Navigating and Routes Precede:
+    - Placement of Route is important. Angular application will read the routes from top to bottom
+    , So if a route/:id should place after route/something (If place route/:id Angular will hit that
+    route first and send webapp to that route.)
+    Ex: route = [
+        {path: 'events/new', component: CreateEventComponent},
+        {path: 'events', component: EventsListComponent},
+        {path: 'events/:id', component: EventsDetailsComponent}
+    ]
+
+2/ Route Guards:
++ CanActivate: is a class type to defind a canActivate property in Routes
+    . Implement CanActivate:
+    export class EventRouteActivator implements CanActivate {
+        constructor(private eventsService: EventsService, private router: Router) {}
+        canActivate(route: ActivatedRouteSnapshot) {
+            const eventExists = !!this.eventsService.getEvent(+route.params['id']);
+            if (!eventExists) this.router.navigate(['404']);
+            return eventExists;
+        }
+    }
+    . ActivatedRouteSnapshot: Contains the information about a route associated with a component 
+    loaded in an outlet at a particular moment in time. ActivatedRouteSnapshot can also be used to 
+    traverse the router state tree.
+    . Using canActivated property to import CanActivate:
+        {path: 'events/:id', component: EventsDetailsComponent, canActivate: [EventRouteActivator]} 
+
++ CanDeactivate
+    - The CanDeactivate is an interface that is implemented by our class to create a route guard 
+    to decide if a route can be deactivated.
+    - Define CanDeactivate for canDeactivate property in Routes
+    Ex: 
+    // In routes.ts
+    {
+        path: 'events/new',
+        component: CreateEventComponent,
+        canDeactivate: ['canDeactivateCreateEvent'],
+    },
+    // In app.module.ts
+    providers: [
+        ...,
+        { provide: 'canDeactivateCreateEvent', useValue: checkDirtyState },
+    ],
+    --> This syntax mean The canDeactivateCreateEvent will be create using checkDirtyState() function
+
+    // Create checkDirtyState() to popup confirm dialog when user want to leave that route
+    export function checkDirtyState(compnent: CreateEventComponent) {
+        if (compnent.isDirty) {
+            return window.confirm(
+            'You have not save this event, do you really want to cancel?'
+            );
+        }
+        return true;
+    }
+
+3/ RouterLinkActive
++ routerLinkActive:
+    - To Add Class when [routerLink] is active
++ routerLinkActiveOptions:
+    - To check if it exactly match the route. Not route/:id or route/something.
+Ex: 
+<a [routerLink]="['/events']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+    All Events
+</a
+
+
+
+4/ Pre-loading Data using Rsjx
+- Stream Programming there are two main interfaces: Observable and Observer.
+    + Observable is for the consumer, it can be transformed and subscribed:
+    Ex: observable.map(x => ...).filter(x => ...).subscribe(x => ...)
+    + Observer is the interface which is used to feed an observable source:
+    Ex: observer.next(newItem)
+- We can create new Observable with an Observer:
+Ex: var observable = Observable.create(observer => { 
+    observer.next('first'); 
+    observer.next('second'); 
+    ... 
+});
+Or, we can use a Subject which implements both the Observable and the Observer interfaces:
+
+Ex: var source = new Subject();
+source.map(x => ...).filter(x => ...).subscribe(x => ...)
+source.next('first')
+source.next('second')
+observable.map(x => ...).filter(x => ...).subscribe(x => ...)
+
+- Rxjs (Reactive Extensions for JavaScript): is a library for reactive programming using observables 
+that makes it easier to compose asynchronous or callback-based code.
+
+- Route Resolver
+Ex:
+// In routes.ts
+{path: 'events', component: EventsListComponent,  resolve: { events: EventListResolver }}
+
+// Resolver service
+@Injectable()
+export class EventListResolver implements Resolve<any> {
+  constructor(private eventsService: EventsService) {}
+
+  resolve() {
+    return this.eventsService.getEvents().pipe(map((events) => events));
+  }
+}
+
+// Get Events Asynchronously. Webpage will wait 1 second to load events
+import { Subject } from 'rxjs';
+@Injectable()
+export class EventsService {
+  getEvents() {
+    let subject = new Subject();
+    setTimeout(() => {
+      subject.next(EVENTS);
+      subject.complete();
+    }, 1000);
+    return subject;
+  }
+  ...
+}
+
+// Init the resolver
+export class EventsListComponent implements OnInit {
+    events: any;
+    constructor(..., private route: ActivatedRoute) {}
+
+    ngOnInit(): void {
+        this.events = this.route.snapshot.data['events'];
+     -> ['events'] is ..., resolve: {'events': EventListResolver} in routes.ts
+    }
+}
+
+5/ Lazyloading a Component
+- When we access one component we can make it's related component to only load when needed.
++ RouterModule.forChild(...): call forChild() in feature modules
++ RouterModule.forRoot(...): forRoot() was already called in the root module and all necessary 
+services were added. So calling forRoot() again will lead to unpredictable states
+
+Ex: 
+//User Module
+@NgModule({
+  imports: [CommonModule, RouterModule.forChild(userRoutes)],
+  declarations: [ProfileComponent]
+})
+export class UserModule {}
+
+// userRoutes
+export const userRoutes = [{ path: 'profile', component: ProfileComponent }];
+
+//App Module
+@NgModule({
+  imports: [BrowserModule, RouterModule.forRoot(appRoutes)],
+  ...
+})
+
+// appRoutes will loading UserModule Lazily by doing this
+export const appRoutes: Routes = [
+    ...
+    {
+        path: 'user',
+        loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
+    }
+];
+
+6/ Organizing Export with Barrel
+Doing this: 
+// Barrel (1) 
+export * from './event.service';
+
+// Barrel (2) 
+export * from './events-details.component';
+export * from './events-route-activator.service';
+
+// Parent Barrel
+export * from './create-event.comonent';
+export * from './events-thumbnail.component';
+export * from './event-list-resolver.service';
+export * from './events-list.component';
+(1) --> export * from './shared/index'; 
+(2) --> export * from './events-details/index';
+

@@ -1,0 +1,40 @@
+Summary:
+1/ Template 
+- template: contain html contents
+- templateUrl: contain .html file url.
+
+2/ Communicating with Components 
+- Communicating with Child Component:
+    + @Input Decorators:
+        - @Input Decorator tell Angular the property will be passed from another component
+    + [$input] = "$prop" $input is property of @Input, $prop is property passed in
+      Ex: [event] = "event1"
+
+- Communicating with Parent Component:
+    + @Output Decorators:
+        - @Output Decorator used in response to event within a child component so that the Parent
+        can receive info when e.g (click) occurs in child component.
+    + EventEmitter:
+        - Often use with @Output
+        - EventEmitter.emit(...): emit an event from child component when event occurs.
+        Ex: <event-thumbnail (eventClick) = "handleEventClicked($event)"></event-thumbnail>
+            - eventClick is @Output property
+            - $event is ... in EventEmitter.emit(...)
+
+3/ Template Variables
+- use '#' to declare an instant of component and access the properties in it.
+Ex: <event-thumbnail #thumbnail>
+        <h3>{{thumbnail.prop}}</h3> -> prop is property inside event-thumbnail component
+    </event-thumbnail>
+
+4/ Styling Component and Encapsulation CSS
+- Use styles property in @Component
+Ex: 
+// Inside EventThumbnailComponent
+@Component({
+  ... ,
+  styles: [`.container { padding-left: 20px; padding-right: 20px;} `],
+})
+
+** Encapsulation CSS:
+- Angular take care of Encapsulation CSS. Means styles in one Component not affect other Component 

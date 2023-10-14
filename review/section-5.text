@@ -1,0 +1,69 @@
+Summary:
+
+1/ Why need services? Dependency Injection
+- Services allow to define Business Logic in a separated file and then Inject what and whenever 
+service we need 
+
+- Dependency injection:
+    - Is basically providing the objects that an object needs (its dependencies) instead of having it 
+    construct them itself. 
+    - It's a very useful technique for testing, since it allows dependencies to be mocked or stubbed 
+    out.
+Ex: class EventList{
+    constructor(private service: Service) {}
+    
+    --> This syntax is shorthand of this: 
+    service: any;
+    constructor(private service: Service){
+        this.service = service;
+    }
+}
+
+2/ @Injectable(), Adding Service, Lifecycle Method (Hook)
+- @Injectable() Decorator is important for any service that will get injected into component or another
+service.
+
++ providers:[...]: 
+    - In @NgModule to add a service. We add the Service into providers: [...] property.
+
++ Lifecycle Method: ngOnInit()
+    - ngOnInit(): Hook in Angular that is called after the constructor is called and after the
+     component's inputs have been initialized.
+
++ OnInit class:
+    - OnInit: is a class type use to satisfy Typescript compilation safety, It also help Intellisense 
+    to warn when the ngOnInit is not implement.
+
+3/ Third-party service - ToastR
+- Install ToastR: 
+    + CLI: npm i toastr --save
+    + define in angular.json: "styles": [..., "node_modules/toastr/build/toastr.min.css"]
+                              "scripts": [..., "node_modules/toastr/build/toastr.min.js"]
+
+- Declare Variables for toastr: Even though ToastR available globally but Typescript doesn't know about
+it.
+
+- Wrapping ToastR:
+    + To make it easier to testing, we should not declare toastr Variables inside component and make it
+    separated to another service to inject
+    + when we finish just need to inject to component and adding service to app Module
+
+Ex: 
+declare let toastr: any;
+
+@Injectable()
+export class ToastrService {
+  success(message: string, title?: string) {
+    toastr.success(message, title);
+  }
+  info(message: string, title?: string) {
+    toastr.info(message, title);
+  }
+  warning(message: string, title?: string) {
+    toastr.warning(message, title);
+  }
+  error(message: string, title?: string) {
+    toastr.error(message, title);
+  }
+}
+

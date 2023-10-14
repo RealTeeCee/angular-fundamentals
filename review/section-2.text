@@ -1,0 +1,24 @@
+Summary:
+1/ Angular CLI: 
+- Install CLI: npm install -g @angular/cli
+- Create Project: ng new [project-name]
+
+2/ Angular Bootstrapping
+- main.ts will Bootstrapping Angular app (main.ts is register in angular.json "main" property)
+- selector: generate the <tag></tag> that will use in a template or .html file
+
+3/ Angular Module (@NgModule) Brief look
+- properties: 
+    + declarations: [...] to add components / pipes / directives.
+    + providers: [...] to add services / routers / resolvers.
+    + imports: [...] to import other modules.
+    + boostrap: [...] to instantiate components as entry points in application (can be multiple).
+
+4/ Accessing Static file
+- Static resources:
+    + assets: [...]
+        - In angular.json by default assets including in: "assets" : [...] -> this is array of paths
+         that webpack will include in app bundles. This is how to make files statically available to 
+         application
+    + styles: [...]
+    + scripts: [...]

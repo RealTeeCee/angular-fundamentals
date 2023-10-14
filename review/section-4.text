@@ -1,0 +1,66 @@
+Summary:
+1/ Interpolation, Property Binding And Expressions
+- Interpolation: Bind data from component to template, when just need to display data.
+  Expression Restrictions: Yes
+Ex: 
+<h2>{{user.name}}</h2>
+<h2>{{2 + 2}}</h2>
+<h2>{{func()}}</h2>
+
+- Property Binding: Bind data from component to template, when need to bind data to property of DOM
+  Expression Restrictions: No
+Ex: [src] = "user.imageUrl"
+
+- Expression Restrictions (Mean CAN NOT):
+    + Assignment: (+, +=, ++, etc)
+    + new Keyword
+    + Expression Chaining with ';'
+    + Can't access Global Namespace: console. , window.
+- Expression Recommendations (Mean SHOULD):
+    + No Side-Effects: Calling expression should not change any data or State of application
+    + Should be FAST, SIMPLE: No Business Logic in Template
+    + Should be IDEMPOTENT: Call expression should return same result each times
+
+2/ Event Binding and Statements
+- Event Binding: Bind event to template.
+Ex: <button (click)="doSomeThing()">Click</button>
+
+- Statement Restrictions (Mean CAN NOT):
+    + Assignment EXCEPT '+': (+=, ++, etc)
+    + new Keyword
+    + Can't access Global Namespace: console. , window.
+- Statement Recommendations (Mean SHOULD):
+    + Should be SIMPLE: No Business Logic in Template
+
+3/ *ngFor, *ngIf, [ngSwitch] - *ngSwitchCase, *ngSwitchDefault
+- *ngFor: Use to repeating data of component
+Ex: Repeating data with *ngFor
+<div class="col-md-5" *ngFor="let event of events">
+    <event-thumbnail [event]="event"></event-thumbnail>
+</div>
+
+- *ngIf: Use to check for condition of data (If)
+Ex: Hiding and Showing content with *ngIf
+<div *ngIf="event?.name"> // Will not render if condition FALSE
+    <h2>{{event?.name}}</h2>
+</div>
+
+- [ngSwitch]: Use to check for many properly conditions of data (Switch - Case)
+Ex: Hiding and Showing content with [ngSwitch]
+<div [ngSwitch]="event?.time"> // Will not render if condition FALSE
+    <span *ngSwitchCase="'8:00 am'">Early Start</span>
+    <span *ngSwitchCase="'10:00 am'">Late Start</span>
+    <span *ngSwitchDefault>Start</span>
+</div>
+
+4/ Styling Components with [ngClass] ,[ngStyle]
+- [ngClass]: Binding class to component
+Ex: 
+<div [ngClass]="{green: event?time === '8:00 am', bold: event?time === '8:00 am'}"></div>
+
+- [ngStyle]: Binding style to component
+Ex: 
+<div [ngStyle]="{
+ color: event?time === '8:00 am' ? '#003300' : '#bbb',
+ bold: event?time === '8:00 am' ? 'bold' : 'normal'
+}"></div>
