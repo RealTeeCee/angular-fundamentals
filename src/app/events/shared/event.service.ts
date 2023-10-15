@@ -14,7 +14,7 @@ export class EventsService {
     return subject;
   }
 
-  getEvent(id: number): IEvent | undefined {
+  getEvent(id: number): IEvent {
     return EVENTS.find((event) => event.id === id);
   }
 
@@ -23,9 +23,14 @@ export class EventsService {
     event.session = [];
     EVENTS.push(event);
   }
+
+  updateEvent(event) {
+    let index = EVENTS.findIndex((x) => (x.id = event.id));
+    EVENTS[index] = event;
+  }
 }
 
-const EVENTS: IEvent[] = [
+const EVENTS: IEvent[] | any = [
   {
     id: 1,
     name: 'Angular Connect',
