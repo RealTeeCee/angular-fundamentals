@@ -4,7 +4,7 @@ export function restrictedWords(words) {
   return (control: FormControl): { [key: string]: any } => {
     if (!words) return {};
 
-    var invalidWords = words
+    const invalidWords = words
       .map((w) => (control.value.includes(w) ? w : null))
       .filter((w) => w != null);
 
