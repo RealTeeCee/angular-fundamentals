@@ -7,8 +7,8 @@ import { IEvent } from './shared/event.model';
     [routerLink]="['/events', event?.id]"
     class="well hoverwell thumbnail"
   >
-    <h2>{{ event?.name }}</h2>
-    <div>Date: {{ event?.date }}</div>
+    <h2>{{ event?.name | uppercase }}</h2>
+    <div>Date: {{ event?.date | date:'shortDate' }}</div>
     <!-- *************** CLASS BINDING ***************
     <div [class.green]="event?.time === '8:00 am'" [ngSwitch]="event?.time">
 
@@ -53,7 +53,7 @@ import { IEvent } from './shared/event.model';
       )
     </div>
 
-    <div>Price: \${{ event?.price }}</div>
+    <div>Price: {{ event?.price | currency:'USD'}}</div>
     <div *ngIf="event?.location">
       <!-- <div [hidden]="!event?.location"> -->
       <span>Location: {{ event?.location?.address }}</span>

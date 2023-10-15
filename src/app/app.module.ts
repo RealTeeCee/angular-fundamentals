@@ -14,6 +14,7 @@ import {
   CreateSessionComponent,
   SessionListComponent,
   EventsService,
+  DurationPipe,
 } from './events/index';
 
 import { ToastrService } from './common/toastr.service';
@@ -43,6 +44,8 @@ import { appRoutes } from './routes';
     SessionListComponent,
     collapsibleWellComponent,
     Error404Component,
+
+    DurationPipe,
   ],
   providers: [
     EventsService,
