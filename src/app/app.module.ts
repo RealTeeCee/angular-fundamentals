@@ -15,6 +15,7 @@ import {
   SessionListComponent,
   EventsService,
   DurationPipe,
+  UpvoteComponent,
 } from './events/index';
 
 import {
@@ -54,6 +55,7 @@ let jquery = window['$'];
     collapsibleWellComponent,
     SimpleModalComponent,
     Error404Component,
+    UpvoteComponent,
 
     ModalTriggerDirective,
 
