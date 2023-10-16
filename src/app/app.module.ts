@@ -16,6 +16,8 @@ import {
   EventsService,
   DurationPipe,
   UpvoteComponent,
+  VoterService,
+  LocationValidator,
 } from './events/index';
 
 import {
@@ -58,6 +60,7 @@ let jquery = window['$'];
     UpvoteComponent,
 
     ModalTriggerDirective,
+    LocationValidator,
 
     DurationPipe,
   ],
@@ -68,6 +71,7 @@ let jquery = window['$'];
     { provide: JQ_TOKEN, useValue: jquery },
     EventRouteActivator,
     EventListResolver,
+    VoterService,
     AuthService,
     { provide: 'canDeactivateCreateEvent', useValue: checkDirtyState },
   ],
