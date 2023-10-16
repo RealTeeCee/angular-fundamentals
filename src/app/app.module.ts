@@ -8,7 +8,6 @@ import { EventsAppComponent } from './events-app.component';
 
 import {
   EventListResolver,
-  EventRouteActivator,
   EventsListComponent,
   EventsThumbnailComponent,
   EventsDetailsComponent,
@@ -73,7 +72,7 @@ let jquery = window['$'];
     EventsService, // short-hand code of above
     { provide: TOASTR_TOKEN, useValue: toastr },
     { provide: JQ_TOKEN, useValue: jquery },
-    EventRouteActivator,
+
     EventListResolver,
     EventResolver,
     VoterService,
