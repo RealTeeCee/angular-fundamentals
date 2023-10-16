@@ -36,17 +36,17 @@ export class CreateEventComponent implements OnInit {
 
   ngOnInit() {
     this.event = {
-      name: 'Ng Spectacularr',
-      date: new Date('12/12/2012'),
-      time: '12 am',
-      price: 12.0,
+      name: '',
+      date: null,
+      time: '',
+      price: null,
       location: {
-        address: '12 a',
-        city: '12St',
-        country: '12 b',
+        address: '',
+        city: '',
+        country: '',
       },
-      onlineUrl: '12.vn',
-      imageUrl: '12.vn/12.png',
+      onlineUrl: '',
+      imageUrl: '',
     };
   }
 

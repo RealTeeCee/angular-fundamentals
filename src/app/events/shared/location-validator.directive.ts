@@ -36,7 +36,4 @@ export class LocationValidator implements Validator {
       return { validateLocation: false };
     }
   }
-  registerOnValidatorChange?(fn: () => void): void {
-    throw new Error('Method not implemented.');
-  }
 }
